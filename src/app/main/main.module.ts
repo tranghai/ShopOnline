@@ -1,20 +1,43 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ContactComponent } from './contact/contact.component';
-import { OrderComponent } from './order/order.component';
-import { ProductComponent } from './product/product.component';
-import { ProductCategoryComponent } from './product-category/product-category.component';
-import { SlideComponent } from './slide/slide.component';
-import { FeedbackComponent } from './feedback/feedback.component';
-import { UserComponent } from './user/user.component';
-import { RoleComponent } from './role/role.component';
-import { HomeComponent } from './home/home.component';
 import { MainComponent } from './main.component';
+import { mainRouter } from './main.route';
+import { Routes, RouterModule } from '@angular/router';
+// Modules
+import { HomeModule } from './home/home.module';
+import { ContactModule } from './contact/contact.module';
+import { FeedbackModule } from './feedback/feedback.module';
+import { OrderModule } from './order/order.module';
+import { ProductModule } from './product/product.module';
+import { ProductCategoryModule } from './product-category/product-category.module';
+import { RevenueModule } from './revenue/revenue.module';
+import { RoleModule } from './role/role.module';
+import { UserModule } from './user/user.module';
+import { SlideModule } from './slide/slide.module';
+import { VisitorModule } from './visitor/visitor.module';
+
+// Services
+import { UtilityService } from '../core/services/utility.service';
+import { AuthenService } from '../core/services/authen.service';
+import { RevenueComponent } from './revenue/revenue.component';
+import { VisitorComponent } from './visitor/visitor.component';
 
 @NgModule({
   imports: [
-    CommonModule
+    CommonModule,
+    HomeModule,
+    ContactModule,
+    FeedbackModule,
+    OrderModule,
+    ProductModule,
+    ProductCategoryModule,
+    RoleModule,
+    UserModule,
+    SlideModule,
+    VisitorModule,
+    RouterModule.forChild(mainRouter)
   ],
-  declarations: [ContactComponent, OrderComponent, ProductComponent, ProductCategoryComponent, SlideComponent, FeedbackComponent, UserComponent, RoleComponent, HomeComponent, MainComponent]
+  providers: [UtilityService, AuthenService],
+  declarations: [MainComponent]
 })
 export class MainModule { }
