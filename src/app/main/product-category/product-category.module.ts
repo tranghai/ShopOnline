@@ -5,7 +5,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { DataService } from '../../core/services/data.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { PaginationModule, ModalModule } from 'ngx-bootstrap'
-import {FormsModule} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 const productCategoryRoutes: Routes = [
   { path: '', redirectTo: 'index', pathMatch: 'full' },
@@ -20,6 +20,6 @@ const productCategoryRoutes: Routes = [
     ModalModule.forRoot()
   ],
   declarations: [ProductCategoryComponent],
-  providers:[DataService,NotificationService]
+  providers: [DataService, NotificationService]
 })
 export class ProductCategoryModule { }

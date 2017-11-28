@@ -42,6 +42,7 @@
                       <th>Alias</th>
                       <th>Mô tả</th>
                       <th>Ngày tạo</th>
+                      <th>Tạo bởi</th>
                       <th>Trạng thái</th>
                       <th></th>
                     </tr>
@@ -53,6 +54,7 @@
                       <td>{{productCategory.Alias}}</td>
                       <td>{{productCategory.Description}}</td>
                       <td>{{productCategory.CreatedDate}}</td>
+                      <td>{{productCategory.CreatedBy}}</td>
                       <td>{{productCategory.Status == true ? "Kích hoạt" : "Khóa"}}</td>
                       <td>
                         <button class="btn btn-primary" (click)="showEdit(productCategory.ID)"><i class="fa fa-pencil-square-o"></i></button>

@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
 import { ContactComponent } from './contact.component';
-import { Router } from '@angular/router/src/router';
+import { Routes, RouterModule } from '@angular/router';
+import { DataService } from '../../core/services/data.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { PaginationModule, ModalModule } from 'ngx-bootstrap'
+import { FormsModule } from '@angular/forms';
 
 const contactRoutes: Routes = [
   { path: '', redirectTo: 'indext', pathMatch: 'full' },
@@ -11,8 +14,12 @@ const contactRoutes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(contactRoutes)
+    FormsModule,
+    RouterModule.forChild(contactRoutes),
+    PaginationModule.forRoot(),
+    ModalModule.forRoot()
   ],
-  declarations: [ContactComponent]
+  declarations: [ContactComponent],
+  providers: [DataService, NotificationService]
 })
 export class ContactModule { }

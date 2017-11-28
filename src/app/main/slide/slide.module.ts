@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
 import { SlideComponent } from './slide.component';
+import { Routes, RouterModule } from '@angular/router';
+import { DataService } from '../../core/services/data.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { PaginationModule, ModalModule } from 'ngx-bootstrap'
+import { FormsModule } from '@angular/forms';
 
 const slideRoutes: Routes = [
   { path: '', redirectTo: 'index', pathMatch: 'full' },
@@ -11,7 +15,10 @@ const slideRoutes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(slideRoutes)
+    FormsModule,
+    RouterModule.forChild(slideRoutes),
+    PaginationModule.forRoot(),
+    ModalModule.forRoot()
   ],
   declarations: [SlideComponent]
 })

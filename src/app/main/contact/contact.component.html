@@ -1,3 +1,200 @@
-<p>
-  contact works!
-</p>
+<div class="page-title">
+  <div class="title_left">
+    <h3>Danh sách liên hệ</h3>
+  </div>
+  <div class="title_right">
+    <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+      <div class="input-group">
+        <input type="text" class="form-control" name="filter" (keyup.enter)="loadData()" [(ngModel)]="filter" placeholder="Gõ tên liên hệ...">
+        <span class="input-group-btn">
+            <button class="btn btn-default" (click)="loadData()" type="button">Tìm!</button>
+         </span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <ul class="nav navbar-right panel_toolbox">
+          <li>
+              <button class="btn btn-success" (click)="showAdd()">Thêm mới</button>
+          </li>
+
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+        <div *ngIf="!contacts">
+            <h3>Hiện tại không có liên hệ nào !!!</h3>
+        </div>
+        <div *ngIf="contacts">
+            <table class="table table-bordered" >
+                <thead>
+                  <tr>
+                    <th>Mã</th>
+                    <th>Tên</th>
+                    <th>Địa chỉ</th>
+                    <th>Số điện thoại</th>
+                    <th>Email</th>
+                    <th>Thời gian làm việc</th>
+                    <th>Trạng thái</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let contact of contacts">
+                    <td>{{contact.ID}}</td>
+                    <td>{{contact.Name}}</td>
+                    <td>{{contact.Address}}</td>
+                    <td>{{contact.Phone}}</td>
+                    <td>{{contact.Email}}</td>
+                    <td>{{contact.WorkingHour}}</td>
+                    <td>{{contact.Status == true ? "Kích hoạt" : "Khóa"}}</td>
+                    <td>
+                      <button class="btn btn-primary" (click)="showEdit(contact.ID)"><i class="fa fa-pencil-square-o"></i></button>
+                      <button class="btn btn-danger" (click)="deleteItem(contact.ID)"><i class="fa fa-trash"></i></button>
+      
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="col-md-12">
+                <pagination [boundaryLinks]="true" [itemsPerPage]="pageSize" (pageChanged)="pageChanged($event)" [totalItems]="totalRow"
+                  [(ngModel)]="pageIndex" class="pagination-sm" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
+              </div>
+        </div>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div bsModal #addEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Thêm mới / Chỉnh sửa</h4>
+        <button type="button" class="close pull-right" (click)="addEditModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal form-label-left input_mask" novalidate #addEditForm="ngForm" (ngSubmit)="saveChanges(addEditForm)"
+          *ngIf="entity">
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Tên</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="hidden" [(ngModel)]="entity.ID" name="id" />
+              <input type="text" #name="ngModel" [(ngModel)]="entity.Name" required minlength="3" name="name" class="form-control" />
+              <small [hidden]="name.valid || (name.pristine && !addEditForm.submitted)" class="text-danger">
+                Bạn phải nhập tên ít nhất 3 ký tự
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Địa chỉ</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #address="ngModel" [(ngModel)]="entity.Address" required minlength="3" name="address" class="form-control" />
+              <small [hidden]="address.valid || (address.pristine && !addEditForm.submitted)" class="text-danger">
+                Bạn phải nhập địa chỉ
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Số điện thoại</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #phone="ngModel" [(ngModel)]="entity.Phone" required minlength="3" name="phone" class="form-control" />
+              <small [hidden]="phone.valid || (phone.pristine && !addEditForm.submitted)" class="text-danger">
+                Bạn phải nhập số điện thoại
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Email</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #email="ngModel" [(ngModel)]="entity.Email" required minlength="3" name="email" class="form-control" />
+              <small [hidden]="email.valid || (email.pristine && !addEditForm.submitted)" class="text-danger">
+                Bạn phải nhập Email
+              </small>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Thời gian làm việc</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #workingHour="ngModel" [(ngModel)]="entity.WorkingHour" required minlength="3" name="workingHour" class="form-control" />
+              <small [hidden]="workingHour.valid || (workingHour.pristine && !addEditForm.submitted)" class="text-danger">
+                Bạn phải nhập địa chỉ
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Kinh độ</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #latitude="ngModel" [(ngModel)]="entity.Latitude" required minlength="3" name="latitude" class="form-control" />
+              <small [hidden]="latitude.valid || (latitude.pristine && !addEditForm.submitted)" class="text-danger">
+                Bạn phải nhập kinh độ
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Vĩ độ</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #longitude="ngModel" [(ngModel)]="entity.Longitude" required minlength="3" name="longitude" class="form-control" />
+              <small [hidden]="longitude.valid || (longitude.pristine && !addEditForm.submitted)" class="text-danger">
+                Bạn phải nhập vĩ độ
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Từ khóa</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #metaKeyword="ngModel" [(ngModel)]="entity.MetaKeyword" name="keyword" class="form-control" />
+
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Mô tả SEO</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <input type="text" #metaDescription="ngModel" [(ngModel)]="entity.MetaDescription" required minlength="3" name="metaDescription"
+                class="form-control" />
+              <small [hidden]="metaDescription.valid || (metaDescription.pristine && !addEditForm.submitted)" class="text-danger">
+                Bạn phải nhập tên ít nhất 3 ký tự
+              </small>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12">Trạng thái</label>
+            <div class="col-md-9 col-sm-9 col-xs-12">
+              <div class="checkbox">
+                <label>
+                   <input type="checkbox" [(ngModel)]="entity.Status" name="status" #status="ngModel"> Kích hoạt
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+              <button type="button" (click)="addEditModal.hide()" class="btn btn-primary">Hủy bỏ</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid">Cập nhật</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
