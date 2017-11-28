@@ -1,7 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Routes, RouterModule } from '@angular/router';
 import { ProductCategoryComponent } from './product-category.component';
+import { Routes, RouterModule } from '@angular/router';
+import { DataService } from '../../core/services/data.service';
+import { NotificationService } from '../../core/services/notification.service';
+import { PaginationModule, ModalModule } from 'ngx-bootstrap'
+import {FormsModule} from '@angular/forms';
 
 const productCategoryRoutes: Routes = [
   { path: '', redirectTo: 'index', pathMatch: 'full' },
@@ -10,8 +14,12 @@ const productCategoryRoutes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(productCategoryRoutes)
+    FormsModule,
+    RouterModule.forChild(productCategoryRoutes),
+    PaginationModule.forRoot(),
+    ModalModule.forRoot()
   ],
-  declarations: [ProductCategoryComponent]
+  declarations: [ProductCategoryComponent],
+  providers:[DataService,NotificationService]
 })
 export class ProductCategoryModule { }

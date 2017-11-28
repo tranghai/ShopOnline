@@ -15,6 +15,7 @@ import { RoleModule } from './role/role.module';
 import { UserModule } from './user/user.module';
 import { SlideModule } from './slide/slide.module';
 import { VisitorModule } from './visitor/visitor.module';
+import { UserProfileModule } from './user-profile/user-profile.module';
 
 // Services
 import { UtilityService } from '../core/services/utility.service';
@@ -35,6 +36,7 @@ import { VisitorComponent } from './visitor/visitor.component';
     UserModule,
     SlideModule,
     VisitorModule,
+    UserProfileModule,
     RouterModule.forChild(mainRouter)
   ],
   providers: [UtilityService, AuthenService],

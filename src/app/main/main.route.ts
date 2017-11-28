@@ -16,6 +16,7 @@ export const mainRouter: Routes = [
             { path: 'user', loadChildren: './user/user.module#UserModule' },
             { path: 'visitor', loadChildren: './visitor/visitor.module#VisitorModule' },
             { path: 'revenue', loadChildren: './revenue/revenue.module#RevenueModule' },
+            { path: 'user-profile', loadChildren: './user-profile/user-profile.module#UserProfileModule' },
         ]
     }
 ];
