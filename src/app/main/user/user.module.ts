@@ -8,6 +8,7 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { UploadService } from '../../core/services/upload.service';
+import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 
 const userRoutes: Routes = [
   //localhost:4200/main/user
@@ -21,6 +22,7 @@ const userRoutes: Routes = [
     CommonModule,
     PaginationModule,
     FormsModule,
+    MultiselectDropdownModule,
     ModalModule.forRoot(),
     RouterModule.forChild(userRoutes)
   ],

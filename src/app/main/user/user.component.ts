@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
+
 @Component({
   selector: 'app-user',
   templateUrl: './user.component.html',

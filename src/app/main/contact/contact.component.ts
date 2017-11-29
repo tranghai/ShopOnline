@@ -9,6 +9,8 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { UtilityService } from '../../core/services/utility.service'
 import { AuthenService } from '../../core/services/authen.service';
 
+declare var moment : any;
+
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
@@ -26,6 +28,11 @@ export class ContactComponent implements OnInit {
 
   constructor(private _dataService: DataService, private _notificationService: NotificationService, private _utilityService: UtilityService, private _authenService: AuthenService) { }
 
+  public options: any = {
+    locale: { format: 'YYYY-MM-DD' },
+    alwaysShowCalendars: false,
+  };
+
   ngOnInit() {
     this.loadData();
   }
@@ -37,6 +44,9 @@ export class ContactComponent implements OnInit {
         this.pageIndex = response.PageIndex;
         this.pageSize = response.PageSize;
         this.totalRow = response.TotalRows;
+        for(var contact of this.contacts){
+          contact.CreatedDate = moment(new Date(contact.CreatedDate)).format('DD/MM/YYYY');
+        }
         console.log(response);
       });
   }
