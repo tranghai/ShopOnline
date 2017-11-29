@@ -44,6 +44,7 @@ export class ContactComponent implements OnInit {
   loadProductCategory(id: any) {
     this._dataService.get('/api/contact/detail/' + id).subscribe((response: any) => {
       this.entity = response;
+      console.log(response);
     });
   }
 
@@ -64,7 +65,7 @@ export class ContactComponent implements OnInit {
 
   public saveChanges(form: NgForm) {
     if (form.valid) {
-      if (this.entity.ID == undefined) {
+      if (this.entity.Id == undefined) {
         this._dataService.post('/api/contact/create', JSON.stringify(this.entity)).subscribe((response: any) => {
           this.loadData();
           this.addEditModal.hide();
