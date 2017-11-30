@@ -114,7 +114,7 @@
             <div class="col-md-6 col-sm-6 col-xs-12">
               <input type="file" #image name="image" class="form-control" [(ngModel)]= "_imageUrl">
               <p class="help-block label label-danger"> chỉ hỗ trợ định dạng *.png, *.jpg, *.jpeg </p>
-              <input type="hidden" [(ngModel)]="entity.Image" name="imageUrl" />
+              <input type="hidden" [(ngModel)]="entity.Image" name="image" />
             </div>
             <div class="col-md-3 col-sm-3 col-xs-12" *ngIf="entity.Image">
               <img [src]="baseFolder + entity.Image" width="128" />

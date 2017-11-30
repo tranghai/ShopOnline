@@ -1,3 +1,318 @@
-<p>
-  product works!
-</p>
+<div class="page-title">
+  <div class="title_left">
+    <h3>Danh sách sản phẩm</h3>
+  </div>
+  <div class="title_right">
+    
+
+    <div class="col-md-5 col-sm-6 col-xs-12 form-group ">
+        <select class="form-control" name="filterCategoryID" [(ngModel)]="filterCategoryID">
+           <option value="">-- Chọn danh mục --</option>
+           <option *ngFor="let x of listProductCategories" [value]="x.ID">{{x.Name}}</option>
+        </select>
+      </div>
+
+      <div class="col-md-4 col-sm-5 col-xs-12 form-group ">
+          <div class="input-group">
+              <input type="text" name="filter" [(ngModel)]="filterKeyword" class="form-control" placeholder="Tìm kiếm...">
+          </div>
+        </div>
+
+      <div class="col-md-3 col-sm-6 col-xs-12 form-group">
+        <button class="btn btn-primary" type="button" (click)="search()">Tìm</button>
+        <button class="btn btn-default" type="button" (click)="reset()">Reset</button>
+      </div>
+  </div>
+</div>
+<div class="clearfix"></div>
+<div class="row">
+  <div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <ul class="nav navbar-right panel_toolbox">
+          <li>
+            <button class="btn btn-success" (click)="showAdd()">Thêm mới</button>
+          </li>
+
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+        <div *ngIf="!products">
+          <h3>Hiện tại không có danh sách sản phẩm nào !!!</h3>
+        </div>
+        <div *ngIf="products">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th>Tên sản phẩm</th>
+                <th>Danh mục</th>
+                <th>Hình ảnh</th>
+                <td>Ngày tạo</td>
+                <td>Người tạo</td>
+                <th>Trạng thái</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of products">
+                <td>{{product.Name}}</td>
+                <td></td>
+                <td>
+                  <img width="128" [src]="baseFolder + product.Image" />
+                </td>
+                <td>{{product.CreatedDate}}</td>
+                <td>{{product.CreatedBy}}</td>
+                <td>{{product.Status == true ? "Kích hoạt" : "Khóa"}}</td>
+                <td>
+                  <button class="btn btn-primary" (click)="showEdit(product.ID)">
+                    <i class="fa fa-pencil-square-o"></i>
+                  </button>
+                  <button class="btn btn-danger" (click)="deleteItem(product.ID)">
+                    <i class="fa fa-trash"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="col-md-12">
+            <pagination [boundaryLinks]="true" [itemsPerPage]="pageSize" (pageChanged)="pageChanged($event)" [totalItems]="totalRow"
+              [(ngModel)]="pageIndex" class="pagination-sm" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+              lastText="&raquo;"></pagination>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div bsModal #addEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title pull-left">Thêm mới / Chỉnh sửa</h4>
+        <button type="button" class="close pull-right" (click)="addEditModal.hide()" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form class="form-horizontal form-label-left input_mask" novalidate #addEditForm="ngForm" (ngSubmit)="saveChanges(addEditForm)"
+          *ngIf="entity">
+          <div class="" role="tabpanel" data-example-id="togglable-tabs">
+            <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#tab_content1" id="product-info" role="tab" data-toggle="tab" aria-expanded="true">Thông tin sản phẩm</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#tab_content2" role="tab" id="product-info-other" data-toggle="tab" aria-expanded="false">Thông tin thêm</a>
+              </li>
+            </ul>
+            <div id="myTabContent" class="tab-content">
+              <div role="tabpanel" class="tab-pane fade active in" id="tab_content1" aria-labelledby="product-info">
+
+                <!-- start product info activity -->
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Tên</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="hidden" [(ngModel)]="entity.ID" name="id" />
+                    <input type="text" #name="ngModel" (keypress)="createAlias()" [(ngModel)]="entity.Name" required minlength="3" name="name"
+                      class="form-control" />
+                    <small [hidden]="name.valid || (name.pristine && !addEditForm.submitted)" class="text-danger">
+                  Bạn phải nhập tên ít nhất 3 ký tự
+                </small>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Alias</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #alias="ngModel" [(ngModel)]="entity.Alias" required minlength="3" name="alias" class="form-control" />
+                    <small [hidden]="alias.valid || (alias.pristine && !addEditForm.submitted)" class="text-danger">
+                  Bạn phải nhập alias
+                </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Danh mục</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <select class="form-control" name="categoryID" [(ngModel)]="entity.CategoryID">
+                   <option value="">--Chọn danh mục sản phẩm--</option>
+                    <option *ngFor="let x of listProductCategories" [value]="x.ID">{{x.Name}}</option>
+                  </select>
+                    <input type="hidden" [(ngModel)]="entity.CategoryID" name="categoryID" class="form-control" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Hình ảnh</label>
+                  <div class="col-md-6 col-sm-6 col-xs-12">
+                    <input type="file" #image name="image" class="form-control">
+                    <p class="help-block label label-danger"> chỉ hỗ trợ định dạng *.png, *.jpg, *.jpeg </p>
+                    <input type="hidden" [(ngModel)]="entity.image" name="image" />
+                  </div>
+                  <div class="col-md-3 col-sm-3 col-xs-12" *ngIf="entity.image">
+                    <img [src]="baseFolder + entity.image" width="128" />
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Giá bán</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="number" #price="ngModel" [(ngModel)]="entity.Price" required name="price" class="form-control" />
+                    <small [hidden]="price.valid || (price.pristine && !addEditForm.submitted)" class="text-danger">
+                  Bạn phải nhập giá bán
+                </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Giá khuyến mãi</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="number" #promotionPrice="ngModel" [(ngModel)]="entity.PromotionPrice" name="promotionPrice" class="form-control"/>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Trạng thái</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" [(ngModel)]="entity.Status" name="status" #status="ngModel"> Kích hoạt
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" [(ngModel)]="entity.HomeFlag" name="homeFlag" #status="ngModel"> Hiển thị trang chủ
+                      </label>
+                    </div>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" [(ngModel)]="entity.HotFlag" name="hotFlag" #status="ngModel"> Sản phẩm nổi bật
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <!-- end product info activity -->
+
+              </div>
+              <div role="tabpanel" class="tab-pane fade" id="tab_content2" aria-labelledby="product-info-other">
+
+                <!-- start product info other projects -->
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Hệ điều hành</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #os="ngModel" [(ngModel)]="entity.OS" required minlength="3" name="os" class="form-control" />
+                    <small [hidden]="os.valid || (os.pristine && !addEditForm.submitted)" class="text-danger">
+                      Bạn phải nhập Hệ điều hành
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Card màn hình</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #graphics="ngModel" [(ngModel)]="entity.Graphics" required minlength="3" name="graphics" class="form-control"
+                    />
+                    <small [hidden]="graphics.valid || (graphics.pristine && !addEditForm.submitted)" class="text-danger">
+                      Bạn phải nhập Card màn hình
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Chip xử lý</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #processor="ngModel" [(ngModel)]="entity.Processor" required minlength="3" name="processor" class="form-control"
+                    />
+                    <small [hidden]="processor.valid || (processor.pristine && !addEditForm.submitted)" class="text-danger">
+                      Bạn phải nhập Chip xử lý
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Màn hình</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #screen="ngModel" [(ngModel)]="entity.Screen" required minlength="3" name="screen" class="form-control"
+                    />
+                    <small [hidden]="screen.valid || (screen.pristine && !addEditForm.submitted)" class="text-danger">
+                      Bạn phải nhập alias
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Ram</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #ram="ngModel" [(ngModel)]="entity.Ram" required minlength="3" name="ram" class="form-control" />
+                    <small [hidden]="ram.valid || (ram.pristine && !addEditForm.submitted)" class="text-danger">
+                      Bạn phải nhập alias
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Dung lượng</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #storage="ngModel" [(ngModel)]="entity.Storage" required minlength="3" name="storage" class="form-control"
+                    />
+                    <small [hidden]="storage.valid || (storage.pristine && !addEditForm.submitted)" class="text-danger">
+                      Bạn phải nhập alias
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Âm thanh</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #opticalMultimedia="ngModel" [(ngModel)]="entity.OpticalMultimedia" required minlength="3" name="opticalMultimedia"
+                      class="form-control" />
+                    <small [hidden]="opticalMultimedia.valid || (opticalMultimedia.pristine && !addEditForm.submitted)" class="text-danger">
+                      Bạn phải nhập alias
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Pin và cân nặng</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #weightBattery="ngModel" [(ngModel)]="entity.WeightBattery" required minlength="3" name="weightBattery"
+                      class="form-control" />
+                    <small [hidden]="weightBattery.valid || (weightBattery.pristine && !addEditForm.submitted)" class="text-danger">
+                      Bạn phải nhập alias
+                    </small>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="control-label col-md-3 col-sm-3 col-xs-12">Cổng kết nối</label>
+                  <div class="col-md-9 col-sm-9 col-xs-12">
+                    <input type="text" #ports="ngModel" [(ngModel)]="entity.Ports" required minlength="3" name="ports" class="form-control" />
+                    <small [hidden]="ports.valid || (ports.pristine && !addEditForm.submitted)" class="text-danger">
+                      Bạn phải nhập alias
+                    </small>
+                  </div>
+                </div>
+
+                <!-- end product info other projects -->
+
+              </div>
+            </div>
+          </div>
+
+          <div class="ln_solid"></div>
+          <div class="form-group">
+            <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+              <button type="button" (click)="addEditModal.hide()" class="btn btn-primary">Hủy bỏ</button>
+              <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid">Cập nhật</button>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
