@@ -8,14 +8,14 @@ import { ActivatedRoute } from '@angular/router/src/router_state';
 export class AuthGuard implements CanActivate {
     constructor(private router: Router) { }
 
-    canActivate(activeteRoute: ActivatedRouteSnapshot, routeSate: RouterStateSnapshot) {
+    canActivate(activateRoute: ActivatedRouteSnapshot, routeState: RouterStateSnapshot) {
         if (localStorage.getItem(SystemConstants.CURRENT_USER)) {
             return true;
         }
         else {
             this.router.navigate([UrlConstants.LOGIN], {
                 queryParams: {
-                    returnUrl: routeSate.url
+                    returnUrl: routeState.url
                 }
             });
         }

@@ -69,20 +69,26 @@ export class FeedbackComponent implements OnInit {
   
     public saveChanges(form : NgForm){
       if(form.valid){
-        if(this.entity.ID == undefined){
-          this._dataService.post('/api/feedback/create', JSON.stringify(this.entity)).subscribe((response:any) =>{
-            this.loadData();
-            this.addEditModal.hide();
-            this._notificationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
-          }, error => this._dataService.handleError(error));
-        }
-        else{
-          this._dataService.put('/api/feedback/update', JSON.stringify(this.entity)).subscribe((response:any) =>{
-            this.loadData();
-            this.addEditModal.hide();
-            this._notificationService.printSuccessMessage(MessageContstants.UPDATED_OK_MSG);
-          }, error => this._dataService.handleError(error));
-        }
+        this.saveData(form);
+      }
+    }
+
+    private saveData(form: NgForm){
+      if(this.entity.Id == undefined){
+        this._dataService.post('/api/feedback/create', JSON.stringify(this.entity)).subscribe((response:any) =>{
+          this.loadData();
+          this.addEditModal.hide();
+          form.resetForm();
+          this._notificationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
+        }, error => this._dataService.handleError(error));
+      }
+      else{
+        this._dataService.put('/api/feedback/update', JSON.stringify(this.entity)).subscribe((response:any) =>{
+          this.loadData();
+          this.addEditModal.hide();
+          form.resetForm();
+          this._notificationService.printSuccessMessage(MessageContstants.UPDATED_OK_MSG);
+        }, error => this._dataService.handleError(error));
       }
     }
   

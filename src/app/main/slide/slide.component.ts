@@ -8,6 +8,8 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 
 import { UtilityService } from '../../core/services/utility.service'
 import { AuthenService } from '../../core/services/authen.service';
+import { SystemConstants } from '../../core/common/system.constants';
+import { UploadService } from '../../core/services/upload.service';
 
 @Component({
   selector: 'app-slide',
@@ -16,7 +18,9 @@ import { AuthenService } from '../../core/services/authen.service';
 })
 export class SlideComponent implements OnInit {
   @ViewChild('addEditModal') public addEditModal: ModalDirective;
+  @ViewChild('image') image;
 
+  public baseFolder: string = SystemConstants.BASE_API;
   public pageIndex: number = 1;
   public pageSize: number = 10;
   public totalRow: number;
@@ -24,7 +28,8 @@ export class SlideComponent implements OnInit {
   public entity: any;
   public slides: any[];
 
-  constructor(private _dataService: DataService, private _notificationService: NotificationService, private _utilityService: UtilityService, private _authenService: AuthenService) { }
+  constructor(private _dataService: DataService, private _notificationService: NotificationService, private _utilityService: UtilityService,
+     private _authenService: AuthenService, private _uploadService: UploadService) { }
 
   ngOnInit() {
     this.loadData();
@@ -64,20 +69,37 @@ export class SlideComponent implements OnInit {
 
   public saveChanges(form: NgForm) {
     if (form.valid) {
-      if (this.entity.ID == undefined) {
-        this._dataService.post('/api/slide/create', JSON.stringify(this.entity)).subscribe((response: any) => {
-          this.loadData();
-          this.addEditModal.hide();
-          this._notificationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
-        }, error => this._dataService.handleError(error));
+      let fi = this.image.nativeElement;
+      if(fi.files.length > 0){
+        this._uploadService.postWithFile('/api/upload/saveImage?type=banner', null, fi.files)
+          .then((imageUrl: string) => {
+            this.entity.Image = imageUrl;
+          }).then(() =>{
+            this.saveData(form);
+          });
       }
       else {
-        this._dataService.put('/api/slide/update', JSON.stringify(this.entity)).subscribe((response: any) => {
-          this.loadData();
-          this.addEditModal.hide();
-          this._notificationService.printSuccessMessage(MessageContstants.UPDATED_OK_MSG);
-        }, error => this._dataService.handleError(error));
+        this.saveData(form);
       }
+    }
+  }
+
+  private saveData(form:NgForm){
+    if (this.entity.ID == undefined) {
+      this._dataService.post('/api/slide/create', JSON.stringify(this.entity)).subscribe((response: any) => {
+        this.loadData();
+        this.addEditModal.hide();
+        form.resetForm();
+        this._notificationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
+      }, error => this._dataService.handleError(error));
+    }
+    else {
+      this._dataService.put('/api/slide/update', JSON.stringify(this.entity)).subscribe((response: any) => {
+        this.loadData();
+        this.addEditModal.hide();
+        form.resetForm();
+        this._notificationService.printSuccessMessage(MessageContstants.UPDATED_OK_MSG);
+      }, error => this._dataService.handleError(error));
     }
   }
 

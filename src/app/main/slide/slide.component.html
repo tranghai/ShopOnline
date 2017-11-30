@@ -50,7 +50,7 @@
                     <td>{{slide.Description}}</td>
                     <td>{{slide.Link}}</td>
                     <td>{{slide.Status == true ? "Kích hoạt" : "Khóa"}}</td>
-                    <td>{{slide.Image}}</td>
+                    <td><img [src]="baseFolder + slide.Image" class="img-responsive" width="128" /></td>
                     <td>
                       <button class="btn btn-primary" (click)="showEdit(slide.ID)"><i class="fa fa-pencil-square-o"></i></button>
                       <button class="btn btn-danger" (click)="deleteItem(slide.ID)"><i class="fa fa-trash"></i></button>
@@ -112,13 +112,13 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Hình ảnh</label>
             <div class="col-md-6 col-sm-6 col-xs-12">
-              <input type="file" #image name="image" class="form-control">
+              <input type="file" #image name="image" class="form-control" [(ngModel)]= "_imageUrl">
               <p class="help-block label label-danger"> chỉ hỗ trợ định dạng *.png, *.jpg, *.jpeg </p>
               <input type="hidden" [(ngModel)]="entity.Image" name="imageUrl" />
             </div>
-
-            <div class="col-md-3 col-sm-3 col-xs-12" *ngIf="entity.Avatar">
-              <img [src]="entity.Avatar" width="128" />
+            <div class="col-md-3 col-sm-3 col-xs-12" *ngIf="entity.Image">
+              <img [src]="baseFolder + entity.Image" width="128" />
+              
             </div>
           </div>
 

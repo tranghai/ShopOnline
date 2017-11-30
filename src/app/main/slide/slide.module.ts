@@ -6,6 +6,7 @@ import { DataService } from '../../core/services/data.service';
 import { NotificationService } from '../../core/services/notification.service';
 import { PaginationModule, ModalModule } from 'ngx-bootstrap'
 import { FormsModule } from '@angular/forms';
+import { UploadService } from '../../core/services/upload.service';
 
 const slideRoutes: Routes = [
   { path: '', redirectTo: 'index', pathMatch: 'full' },
@@ -20,6 +21,7 @@ const slideRoutes: Routes = [
     PaginationModule.forRoot(),
     ModalModule.forRoot()
   ],
-  declarations: [SlideComponent]
+  declarations: [SlideComponent],
+  providers: [DataService, NotificationService, UploadService]
 })
 export class SlideModule { }

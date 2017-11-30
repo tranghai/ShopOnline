@@ -112,7 +112,7 @@
             <div class="form-group">
               <label class="control-label col-md-3 col-sm-3 col-xs-12">Mô tả</label>
               <div class="col-md-9 col-sm-9 col-xs-12">
-                <textarea type="text" #name="ngModel" [(ngModel)]="entity.Description" name="description" class="form-control"></textarea>
+                <textarea type="text" #description="ngModel" [(ngModel)]="entity.Description" name="description" class="form-control"></textarea>
               </div>
             </div>
   
@@ -120,7 +120,6 @@
               <label class="control-label col-md-3 col-sm-3 col-xs-12">Từ khóa</label>
               <div class="col-md-9 col-sm-9 col-xs-12">
                 <input type="text" #metaKeyword="ngModel" [(ngModel)]="entity.MetaKeyword" name="keyword" class="form-control" />
-  
               </div>
             </div>
             <div class="form-group">
