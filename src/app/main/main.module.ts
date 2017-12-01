@@ -22,6 +22,7 @@ import { UtilityService } from '../core/services/utility.service';
 import { AuthenService } from '../core/services/authen.service';
 import { RevenueComponent } from './revenue/revenue.component';
 import { VisitorComponent } from './visitor/visitor.component';
+import { DatePickerComponent } from 'ngx-bootstrap/datepicker/datepicker.component';
 
 @NgModule({
   imports: [
