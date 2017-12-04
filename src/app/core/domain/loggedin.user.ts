@@ -1,6 +1,7 @@
 export class LoggedInUser {
-    constructor(access_token: string, username: string, fullName: string, email: string, avatar: string,
-        address: string, birthday: string, phonenumber:string, gender: boolean, status: boolean, roles: any[]) {
+    constructor(id: string, access_token: string, username: string, fullName: string, email: string, avatar: string,
+        address: string, birthday: string, phonenumber: string, gender: boolean, status: boolean, roles: any[]) {
+        this.id = id;
         this.access_token = access_token;
         this.fullName = fullName;
         this.username = username;
@@ -21,7 +22,7 @@ export class LoggedInUser {
     public avatar: string;
     public address: string;
     public birthday: string;
-    public phonenumber : string;
+    public phonenumber: string;
     public gender: boolean;
     public status: boolean;
     public roles: any[];

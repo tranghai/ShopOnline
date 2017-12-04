@@ -12,34 +12,13 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Người dùng
-              <small>hoạt động</small>
-            </h2>
-            <ul class="nav navbar-right panel_toolbox">
-              <li>
-                <a class="collapse-link">
-                  <i class="fa fa-chevron-up"></i>
-                </a>
-              </li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                  <i class="fa fa-wrench"></i>
-                </a>
-                <ul class="dropdown-menu" role="menu">
-                  <li>
-                    <a href="#">Settings 1</a>
-                  </li>
-                  <li>
-                    <a href="#">Settings 2</a>
-                  </li>
-                </ul>
-              </li>
-              <li>
-                <a class="close-link">
-                  <i class="fa fa-close"></i>
-                </a>
-              </li>
-            </ul>
+            <h3>{{userProfile.fullName}} 
+              <small style="font-style: italic;" *ngIf="userProfile.status == 'True'">Đang hoạt động</small>
+              <small style="font-style: italic;" *ngIf="userProfile.status == 'False'">Khóa</small>
+              <small style="font-style: italic;" *ngIf="userProfile.status == true">Đang hoạt động</small>
+              <small style="font-style: italic;" *ngIf="userProfile.status == false">Khóa</small>
+            </h3>
+            
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
@@ -51,66 +30,205 @@
                 </div>
               </div>
               <br />
-
-              <!-- start skills -->
-              <h4>Skills</h4>
-              <ul class="list-unstyled user_data">
-                <li>
-                  <p>Web Applications</p>
-                  <div class="progress progress_sm">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="50"></div>
-                  </div>
-                </li>
-                <li>
-                  <p>Website Design</p>
-                  <div class="progress progress_sm">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="70"></div>
-                  </div>
-                </li>
-                <li>
-                  <p>Automation & Testing</p>
-                  <div class="progress progress_sm">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="30"></div>
-                  </div>
-                </li>
-                <li>
-                  <p>UI / UX</p>
-                  <div class="progress progress_sm">
-                    <div class="progress-bar bg-green" role="progressbar" data-transitiongoal="50"></div>
-                  </div>
-                </li>
-              </ul>
-              <!-- end of skills -->
-
             </div>
             <div class="col-md-9 col-sm-9 col-xs-12">
-
-              <div class="profile_title">
-                  <h2>{{userProfile.fullName}}</h2>
-              </div>
+              <h3>Thông tin liện hệ</h3>
               <div class="col-md-12">
-                  <ul class="list-unstyled user_data">
-                      <li>
-                        <i class="fa fa-map-marker user-profile-icon"></i> San Francisco, California, USA
-                      </li>
-  
-                      <li>
-                        <i class="fa fa-briefcase user-profile-icon"></i> Software Engineer
-                      </li>
-  
-                      <li class="m-top-xs">
-                        <i class="fa fa-external-link user-profile-icon"></i>
-                        <a href="http://www.kimlabs.com/profile/" target="_blank">www.kimlabs.com</a>
-                      </li>
-                    </ul>
-  
-                    <a class="btn btn-success">
-                      <i class="fa fa-edit m-right-xs"></i>Edit Profile</a>
+                <table class="table">
+                  <tr>
+                    <td>Email :</td>
+                    <td>{{userProfile.email}}</td>
+                  </tr>
+                  <tr>
+                    <td>Số điện thoại :</td>
+                    <td>{{userProfile.phonenumber}}</td>
+                  </tr>
+                </table>
               </div>
+              <br />
+              <h3>Thông tin cá nhân</h3>
+              <div class="col-md-12">
+                <table class="table">
+                  <tr>
+                    <td>Địa chỉ :</td>
+                    <td>{{userProfile.address}}</td>
+                  </tr>
+                  <tr>
+                    <td>Ngày sinh :</td>
+                    <td>{{userProfile.birthday}}</td>
+                  </tr>
+                  <tr>
+                    <td>Giới tính :</td>
+                    <td>
+                      <p *ngIf="userProfile.gender == true">Nam</p>
+                      <p *ngIf="userProfile.gender == false">Nam</p>
+                      <p *ngIf="userProfile.gender == 'True'">Nam</p>
+                      <p *ngIf="userProfile.gender == 'False'">Nữ</p>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <h3>Quyền</h3>
+              <div class="col-md-12">
+                <table class="table">  
+                  <tr>
+                    <td>{{userProfile.roles}}</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="profile_title">
+                <h2></h2>
+              </div>
+              <a class="btn btn-success" (click)="showModal(userProfile.id)">
+                <i class="fa fa-edit m-right-xs"></i> Chỉnh sửa hồ sơ</a>
+                <a class="btn btn-primary" (click)="showChangePasswordModal()">
+                  <i class="fa fa-exchange"></i> Đổi mật khẩu</a>
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+
+
+<!-- Edit Profile -->
+<div bsModal #addEditModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Chỉnh sửa</h4>
+      <button type="button" class="close pull-right" (click)="addEditModal.hide()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal form-label-left input_mask" novalidate #addEditForm="ngForm" (ngSubmit)="saveChanges(addEditForm)"
+        *ngIf="entity">
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Họ tên</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="text" #name="ngModel" [(ngModel)]="entity.FullName" required minlength="3" name="name" class="form-control">
+            <small [hidden]="name.valid || (name.pristine && !addEditForm.submitted)" class="text-danger">
+              Bạn phải nhập tên ít nhất 3 ký tự
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Email</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="text" #email="ngModel" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$" [(ngModel)]="entity.Email" required
+              name="email" class="form-control">
+            <small [hidden]="email.valid || (email.pristine && !addEditForm.submitted)" class="text-danger">
+              Bạn phải nhập email
+            </small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Địa chỉ</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="text" #address="ngModel" [(ngModel)]="entity.Address" name="address" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Điện thoại</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="text" #phonenumber="ngModel" [(ngModel)]="entity.PhoneNumber" required name="phonenumber" class="form-control">
+            <small [hidden]="phonenumber.valid || (phonenumber.pristine && !addEditForm.submitted)" class="text-danger">
+              Bạn phải nhập số điện thoại
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Ngày sinh</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="text" #birthday="ngModel" daterangepicker (selected)="selectedDate($event)" [options]="dateOptions" [(ngModel)]="entity.BirthDay" name="birthday"
+              class="form-control">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Giới tính</label>
+          <div class="col-md-6 col-sm-6 col-xs-12">
+            <input type="radio" (change)="selectGender($event)" #gender="ngModel" [checked]="entity.Gender=='True'" name="gender" [ngModel]="entity.Gender"
+              value="True" required /> Nam
+            <input type="radio" (change)="selectGender($event)" #gender="ngModel" [checked]="entity.Gender=='False'" name="gender" [ngModel]="entity.Gender"
+              value="False" /> Nữ
+          </div>
+        </div>
+
+        <div class="ln_solid"></div>
+        <div class="form-group">
+          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+            <button type="button" (click)="addEditModal.hide()" class="btn btn-primary">Hủy bỏ</button>
+            <button type="submit" class="btn btn-success" [disabled]="!addEditForm.form.valid">Cập nhật</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- Change Password -->
+<div bsModal #changePasswordModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+aria-hidden="true">
+<div class="modal-dialog modal-lg">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Thay đổi mật khẩu</h4>
+      <button type="button" class="close pull-right" (click)="changePasswordModal.hide()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form class="form-horizontal form-label-left input_mask" novalidate #changePasswordForm="ngForm" (ngSubmit)="changePasswordMethod(changePasswordForm)">
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Mật khẩu hiện tại</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="password" #oldPassword="ngModel" [(ngModel)]="OldPassword" required minlength="6" name="oldPassword" class="form-control">
+            <small [hidden]="oldPassword.valid || (oldPassword.pristine && !changePasswordForm.submitted)" class="text-danger">
+              Bạn phải nhập tên ít nhất 6 ký tự
+            </small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Mật khẩu mới</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="password" #newPassword="ngModel" [(ngModel)]="NewPassword" required minlength="6" name="newPassword" class="form-control">
+            <small [hidden]="newPassword.valid || (newPassword.pristine && !changePasswordForm.submitted)" class="text-danger">
+              Bạn phải nhập tên ít nhất 6 ký tự
+            </small>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="control-label col-md-3 col-sm-3 col-xs-12">Xác nhận mật khẩu</label>
+          <div class="col-md-9 col-sm-9 col-xs-12">
+            <input type="password" #confirmpassword="ngModel" [(ngModel)]="ConfirmPassword" required validateEqual="newPassword"
+              minlength="6" name="confirmpassword" class="form-control">
+            <small [hidden]="confirmpassword.valid || (confirmpassword.pristine && !changePasswordForm.submitted)" class="text-danger">
+              Xác nhận mật khẩu sai
+            </small>
+          </div>
+        </div>
+        
+        <div class="ln_solid"></div>
+        <div class="form-group">
+          <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
+            <button type="button" (click)="changePasswordModal.hide()" class="btn btn-primary">Hủy bỏ</button>
+            <button type="submit" class="btn btn-success" [disabled]="!changePasswordForm.form.valid">Cập nhật</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
 </div>

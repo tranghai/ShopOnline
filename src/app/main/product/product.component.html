@@ -19,7 +19,7 @@
         </div>
 
       <div class="col-md-3 col-sm-6 col-xs-12 form-group">
-        <button class="btn btn-primary" type="button" (click)="search()">Tìm</button>
+        <button class="btn btn-primary" type="button" (click)="loadData()">Tìm</button>
         <button class="btn btn-default" type="button" (click)="reset()">Reset</button>
       </div>
   </div>
@@ -57,11 +57,11 @@
             <tbody>
               <tr *ngFor="let product of products">
                 <td>{{product.Name}}</td>
-                <td></td>
+                <td>{{product.ProductCategory.Name}}</td>
                 <td>
                   <img width="128" [src]="baseFolder + product.Image" />
                 </td>
-                <td>{{product.CreatedDate}}</td>
+                <td>{{product.CreatedDate | date:'dd/mm/yyyy'}}</td>
                 <td>{{product.CreatedBy}}</td>
                 <td>{{product.Status == true ? "Kích hoạt" : "Khóa"}}</td>
                 <td>
@@ -151,10 +151,10 @@
                   <div class="col-md-6 col-sm-6 col-xs-12">
                     <input type="file" #image name="image" class="form-control">
                     <p class="help-block label label-danger"> chỉ hỗ trợ định dạng *.png, *.jpg, *.jpeg </p>
-                    <input type="hidden" [(ngModel)]="entity.image" name="image" />
+                    <input type="hidden" [(ngModel)]="entity.Image" name="image" />
                   </div>
-                  <div class="col-md-3 col-sm-3 col-xs-12" *ngIf="entity.image">
-                    <img [src]="baseFolder + entity.image" width="128" />
+                  <div class="col-md-3 col-sm-3 col-xs-12" *ngIf="entity.Image">
+                    <img [src]="baseFolder + entity.Image" width="128" />
                   </div>
                 </div>
 
@@ -247,8 +247,8 @@
                 <div class="form-group">
                   <label class="control-label col-md-3 col-sm-3 col-xs-12">Ram</label>
                   <div class="col-md-9 col-sm-9 col-xs-12">
-                    <input type="text" #ram="ngModel" [(ngModel)]="entity.Ram" required minlength="3" name="ram" class="form-control" />
-                    <small [hidden]="ram.valid || (ram.pristine && !addEditForm.submitted)" class="text-danger">
+                    <input type="text" #memory="ngModel" [(ngModel)]="entity.Memory" required minlength="3" name="memory" class="form-control" />
+                    <small [hidden]="memory.valid || (memory.pristine && !addEditForm.submitted)" class="text-danger">
                       Bạn phải nhập alias
                     </small>
                   </div>

@@ -25,8 +25,6 @@ export class ProductCategoryComponent implements OnInit {
   public entity: any;
   public productCategories: any[];
 
-  public access_token: string = this._authenService.getLoggedInUser().access_token;
-
   constructor(private _dataService: DataService, private _notificationService: NotificationService, private _utilityService: UtilityService, private _authenService: AuthenService) { }
 
   ngOnInit() {

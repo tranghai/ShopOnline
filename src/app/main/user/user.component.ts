@@ -7,6 +7,7 @@ import { IMultiSelectOption } from 'angular-2-dropdown-multiselect';
 import { UploadService  } from '../../core/services/upload.service';
 import { SystemConstants } from '../../core/common/system.constants';
 import { NgForm } from '@angular/forms/src/directives/ng_form';
+
 declare var moment: any;
 
 @Component({
@@ -64,12 +65,11 @@ export class UserComponent implements OnInit {
     this._dataService.get('/api/appuser/detail/' + id)
       .subscribe((response: any) => {
         this.entity = response;
+        this.myRoles = [];
         for (let role of this.entity.Roles) {
           this.myRoles.push(role);
         }
         this.entity.BirthDay = moment(new Date(this.entity.BirthDay)).format('DD/MM/YYYY');
-        
-        console.log(this.entity.BirthDay);
       });
   }
   pageChanged(event: any): void {
@@ -84,29 +84,30 @@ export class UserComponent implements OnInit {
     this.loadUserDetail(id);
     this.addEditModal.show();
   }
-  saveChanges(valid: boolean) {
-    if (valid) {
+  saveChanges(form: NgForm) {
+    if (form.valid) {
       this.entity.Roles = this.myRoles;
       let fi = this.avatar.nativeElement;
       if (fi.files.length > 0) {
-        this._uploadService.postWithFile('/api/upload/saveImage', null, fi.files)
+        this._uploadService.postWithFile('/api/upload/saveImage?type=avatar', null, fi.files)
         .then((imageUrl: string) => {
           this.entity.Avatar = imageUrl;
         }).then(() => {
-          this.saveData();
+          this.saveData(form);
         });
       }
       else {
-        this.saveData();
+        this.saveData(form);
       }
     }
   }
-  private saveData() {
+  private saveData(form: NgForm) {
     if (this.entity.Id == undefined) {
       this._dataService.post('/api/appuser/create', JSON.stringify(this.entity))
         .subscribe((response: any) => {
           this.loadData();
           this.addEditModal.hide();
+          form.resetForm();
           this._notificationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);
         }, error => this._dataService.handleError(error));
     }
@@ -115,6 +116,7 @@ export class UserComponent implements OnInit {
         .subscribe((response: any) => {
           this.loadData();
           this.addEditModal.hide();
+          form.resetForm();
           this._notificationService.printSuccessMessage(MessageContstants.UPDATED_OK_MSG);
         }, error => this._dataService.handleError(error));
     }
@@ -129,6 +131,9 @@ export class UserComponent implements OnInit {
     });
   }
   public selectGender(event) {
-    this.entity.Gender = event.target.value
+    this.entity.Gender = event.target.value;
+  }
+  public selectedDate(value: any) {
+    this.entity.BirthDay = moment(value.end._d).format('DD/MM/YYYY');
   }
 }

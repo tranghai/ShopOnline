@@ -13,9 +13,7 @@ import { MultiselectDropdownModule } from 'angular-2-dropdown-multiselect';
 import { Daterangepicker } from 'ng2-daterangepicker';
 
 const userRoutes: Routes = [
-  //localhost:4200/main/user
   { path: '', redirectTo: 'index', pathMatch: 'full' },
-  //localhost:4200/main/user/index
   { path: 'index', component: UserComponent }
 ]
 

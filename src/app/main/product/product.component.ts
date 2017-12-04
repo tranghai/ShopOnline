@@ -9,7 +9,7 @@ import { NgForm } from '@angular/forms/src/directives/ng_form';
 import { UtilityService } from '../../core/services/utility.service'
 import { AuthenService } from '../../core/services/authen.service';
 import { SystemConstants } from '../../core/common/system.constants';
-
+import {UploadService} from '../../core/services/upload.service';
 
 declare var moment: any
 
@@ -20,6 +20,7 @@ declare var moment: any
 })
 export class ProductComponent implements OnInit {
   @ViewChild('addEditModal') public addEditModal: ModalDirective;
+  @ViewChild('image') image;
 
   public baseFolder: string = SystemConstants.BASE_API;
   public pageIndex: number = 1;
@@ -31,7 +32,8 @@ export class ProductComponent implements OnInit {
   public filterKeyword: string = '';
   public filterCategoryID: number;
   public listProductCategories: any[];
-  constructor(private _dataService: DataService, private _notificationService: NotificationService, private _utilityService: UtilityService, private _authenService: AuthenService) { }
+  constructor(private _dataService: DataService, private _notificationService: NotificationService, private _utilityService: UtilityService,
+    private _authenService: AuthenService, private _uploadService: UploadService) { }
 
   ngOnInit() {
     this.loadData();
@@ -39,16 +41,18 @@ export class ProductComponent implements OnInit {
   }
 
   loadData() {
-    this._dataService.get('/api/product/getlistpaging?page=' + this.pageIndex + '&pageSize=' + this.pageSize + '&filter=' + this.filter)
+    this._dataService.get('/api/product/getlistpaging?categoryId='+this.filterCategoryID+'&page=' + this.pageIndex + '&pageSize=' + this.pageSize + '&filter=' + this.filterKeyword)
       .subscribe((response: any) => {
         this.products = response.Items;
         this.pageIndex = response.PageIndex;
         this.pageSize = response.PageSize;
         this.totalRow = response.TotalRows;
-        for (var product of this.products) {
-          product.CreatedDate = moment(new Date(product.CreatedDate)).format('DD/MM/YYYY');
-        }
       });
+  }
+  reset(){
+    this.filterCategoryID = null;
+    this.filterKeyword = '';
+    this.loadData();
   }
   loadProductCategories() {
     this._dataService.get('/api/productcategory/getall')
@@ -79,7 +83,19 @@ export class ProductComponent implements OnInit {
 
   public saveChanges(form: NgForm) {
     if (form.valid) {
-      this.saveData(form);
+      let fi = this.image.nativeElement;
+      console.log(fi.files);
+      if(fi.files.length > 0){
+        this._uploadService.postWithFile('/api/upload/saveImage?type=product', null, fi.files)
+        .then((imageUrl: string) =>{
+          this.entity.Image = imageUrl;
+        }).then(() => {
+          this.saveData(form);
+        });
+      }
+      else{
+        this.saveData(form);
+      }
     }
   }
 
