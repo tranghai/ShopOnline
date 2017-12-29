@@ -48,6 +48,7 @@ export class OrderAddComponent implements OnInit {
   public saveChanges(form: NgForm) {
     if (form.valid) {
       this.entity.OrderDetails = this.orderDetails;
+      console.log(this.entity);
       this._dataService.post('/api/order/create', JSON.stringify(this.entity)).subscribe((response: any) => {
         this.entity = response;
         this.notificationService.printSuccessMessage(MessageContstants.CREATED_OK_MSG);

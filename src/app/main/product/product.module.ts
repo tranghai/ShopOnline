@@ -7,20 +7,21 @@ import { NotificationService } from '../../core/services/notification.service';
 import { PaginationModule, ModalModule } from 'ngx-bootstrap'
 import { FormsModule } from '@angular/forms';
 import { Daterangepicker } from 'ng2-daterangepicker';
+import { ProductRouter } from './product.routes';
+import { UtilityService } from '../../core/services/utility.service';
+import { UploadService } from '../../core/services/upload.service';
+import { SimpleTinyComponent } from '../../shared/simple-tiny/simple-tiny.component';
 
-const productRoutes: Routes = [
-  { path: '', redirectTo: 'index', pathMatch: 'full' },
-  { path: 'index', component: ProductComponent }
-]
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     Daterangepicker,
-    RouterModule.forChild(productRoutes),
+    ProductRouter,
     PaginationModule.forRoot(),
     ModalModule.forRoot()
   ],
-  declarations: [ProductComponent]
+  declarations: [ProductComponent, SimpleTinyComponent],
+  providers:[DataService, UtilityService, UploadService]
 })
 export class ProductModule { }

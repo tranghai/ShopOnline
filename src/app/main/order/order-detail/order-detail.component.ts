@@ -32,6 +32,7 @@ export class OrderDetailComponent implements OnInit {
       this.loadOrder(this.orderId);
 
       this.loadOrderDetail(this.orderId);
+      console.log(this.orderId);
     });
 
   }
@@ -46,7 +47,7 @@ export class OrderDetailComponent implements OnInit {
     }, error => this._dataService.handleError(error));
   }
   public exportToExcel() {
-    this._dataService.get('/api/order/exportExcel/' + this.orderId.toString()).subscribe((response: any) => {
+    this._dataService.get('api/order/exportexcel/' + this.orderId.toString()).subscribe((response: any) => {
       console.log(response);
       window.open(this.baseFolder + response.Message);
     }, error => this._dataService.handleError(error));
@@ -58,7 +59,7 @@ export class OrderDetailComponent implements OnInit {
       for (var item of this.orderDetails) {
         this.totalAmount = this.totalAmount + (item.Quantity * item.Price);
       }
-      console.log(this.totalAmount);
+      console.log(this.orderDetails);
     }, error => this._dataService.handleError(error));
   }
 }

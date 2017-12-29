@@ -26,12 +26,8 @@
           </ul>
           <div class="clearfix"></div>
         </div>
-        <div class="x_content">
-          <div *ngIf="!productCategories">
-              <h3>Hiện tại không có danh mục sản phẩm nào !!!</h3>
-          </div>
-          <div  *ngIf="productCategories">
-              <table class="table table-bordered" >
+        <div class="x_content"> 
+              <table *ngIf="productCategories && productCategories.length > 0"  class="table table-bordered" >
                   <thead>
                     <tr>
                       <th>Mã</th>
@@ -61,12 +57,15 @@
                     </tr>
                   </tbody>
                 </table>
-                <div class="col-md-12">
+                <div *ngIf="productCategories && productCategories.length == 0" class="col-md-12">
+                    <div class="alert alert-info">
+                      <strong>Thông báo!</strong> Hiện tại chưa có danh sách sản phẩm nào trong hệ thống
+                    </div>
+                  </div>
+                <div *ngIf="productCategories && productCategories.length > 0" class="col-md-12">
                   <pagination [boundaryLinks]="true" [itemsPerPage]="pageSize" (pageChanged)="pageChanged($event)" [totalItems]="totalRow"
                     [(ngModel)]="pageIndex" class="pagination-sm" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"></pagination>
                 </div>
-          </div>
-         
         </div>
       </div>
     </div>
